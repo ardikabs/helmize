@@ -1,0 +1,251 @@
+app:
+  # app.extraVolumeMounts -- specifies mount point from list of extra volumes attached to the application
+  extraVolumeMounts:
+    - name: shared-volume
+      mountPath: /path/to/shared-volume
+
+  # app.containerPorts -- specifies list of application container ports
+  containerPorts:
+    http:
+      containerPort: 9898
+      protocol: TCP
+
+  # app.deploymentLabels -- additional labels attached to the deployment
+  deploymentLabels:
+    custom: additional-label
+
+  # app.deploymentAnnotations -- additional annotations attached to the deployment
+  deploymentAnnotations:
+    custom: additional-annotation
+
+  livenessProbe:
+    # app.livenessProbe.enabled -- specifies whether pod liveness probe being created or not
+    enabled: true
+    # httpGet:
+    #   path: "/healthz"
+    #   port: 8089
+    exec:
+      command:
+        - podcli
+        - check
+        - http
+        - localhost:9898/readyz
+    # app.livenessProbe.failureThreshold --  Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3.
+    failureThreshold: 3
+    # app.livenessProbe.initialDelaySeconds -- Number of seconds after the container has started before liveness probes are initiated.
+    initialDelaySeconds: 10
+    # app.livenessProbe.periodSeconds -- How often (in seconds) to perform the probe. Default to 10 seconds.
+    periodSeconds: 10
+    # app.livenessProbe.successThreshold -- Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1
+    successThreshold: 1
+    # app.livenessProbe.timeoutSeconds -- Number of seconds after which the probe times out. Defaults to 1 second.
+    timeoutSeconds: 1
+
+  readinessProbe:
+    # app.readinessProbe.enabled -- specifies whether pod readiness probe being created or not
+    enabled: true
+    # httpGet:
+    #   path: "/healthz"
+    #   port: 8089
+    exec:
+      command:
+        - podcli
+        - check
+        - http
+        - localhost:9898/readyz
+    # app.readinessProbe.failureThreshold --  Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3.
+    failureThreshold: 3
+    # app.readinessProbe.initialDelaySeconds -- Number of seconds after the container has started before liveness probes are initiated.
+    initialDelaySeconds: 10
+    # app.readinessProbe.periodSeconds -- How often (in seconds) to perform the probe. Default to 10 seconds.
+    periodSeconds: 10
+    # app.readinessProbe.successThreshold -- Minimum consecutive successes for the probe to be considered successful after having failed. Defaults to 1
+    successThreshold: 1
+    # app.readinessProbe.timeoutSeconds -- Number of seconds after which the probe times out. Defaults to 1 second.
+    timeoutSeconds: 1
+
+  startupProbe:
+    # app.startupProbe.enabled -- specifies whether pod startup probe being created or not
+    enabled: true
+    # httpGet:
+    #   path: "/healthz"
+    #   port: 8089
+    exec:
+      command:
+        - podcli
+        - check
+        - http
+        - localhost:9898/readyz
+    # app.startupProbe.failureThreshold --  Minimum consecutive failures for the probe to be considered failed after having succeeded. Defaults to 3.
+    failureThreshold: 20
+    # app.startupProbe.initialDelaySeconds -- Number of seconds after the container has started before startup probes are initiated.
+    initialDelaySeconds: 1
+    # app.startupProbe.periodSeconds -- How often (in seconds) to perform the probe. Default to 10 seconds.
+    periodSeconds: 10
+
+  service:
+    # app.service.enabled -- specifies whether to expose the application through the Kubernetes Service
+    enabled: true
+
+    # app.service.annotations -- additional annotations attached to the Service
+    annotations:
+      cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
+      networking.gke.io/load-balancer-type: "Internal"
+
+    # app.service.labels -- additional labels attached to the Service
+    labels:
+      custom: additional-label
+
+    # app.service.type -- the Kubernetes Service's type, (supported values: `ClusterIP`, `LoadBalancer`)
+    type: ClusterIP
+
+    ports:
+      # app.service.ports.http -- the Service's named port
+      http:
+        # app.service.ports.http.port -- the Service's port, recommended to always use port 80
+        port: 80
+        # app.service.ports.http.protocol -- the Service's protocol
+        protocol: TCP
+
+  ingress:
+    # app.ingress.enabled -- specifies whether to expose the application through the Kubernetes Ingress
+    enabled: true
+    # app.ingress.ingressClassName -- specifies an ingress class name for the ingress
+    ingressClassName: "nginx"
+    # app.ingress.annotations -- additional annotations attached to the ingress
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: 3600s
+    # app.ingress.labels -- additional labels attached to the ingress
+    labels:
+      custom: additional-label
+    # app.ingress.host -- specifies the host for the ingress
+    host: "podinfo.ardikabs.com"
+    # app.ingress.path -- specifies which path for the ingress
+    path: "/"
+    # app.ingress.pathType -- specifies path type for the ingress
+    pathType: "Prefix"
+    tls:
+      # app.ingress.tls.enabled -- whether enable tls for the ingress
+      enabled: true
+      # app.ingress.tls.secretName -- specifies which secret for the tls on the ingress
+      secretName: "podinfo-ardikabs-com-tls"
+
+  # app.rollingUpdate -- control how rolling update is performed during the deployment
+  rollingUpdate:
+    # app.rollingUpdate.maxSurge -- specifies the maximum number of Pods that can be created over the desired number of Pods.
+    maxSurge: 30%
+    # app.rollingUpdate.maxSurge -- specifies the maximum number of Pods that can be unavailable during the update process
+    maxUnavailable: 0
+
+  # app.resources -- specifies resource size of the application container
+  resources:
+    limits:
+      cpu: 100m
+      memory: 90Mi
+    requests:
+      cpu: 100m
+      memory: 90Mi
+
+  podDisruptionBudget:
+    # app.podDisruptionBudget.enabled -- whether to enable Pod Disruption Budget or not
+    enabled: true
+    # app.podDisruptionBudget.maxUnavailable -- maximum percentage/number of the unavailable pods during disruption
+    maxUnavailable: 25%
+    # app.podDisruptionBudget.annotations -- additional annotations attached to the Pod Disruption Budget
+    annotations:
+      custom: additional-annotation
+    # app.podDisruptionBudget.labels -- additional labels attached to the Pod Disruption Budget
+    labels:
+      custom: additional-label
+
+  # app.nodeSelector -- describes which node must be used for the pod
+  nodeSelector:
+    webserver: public
+
+  # app.tolerations -- describes which toleration used for the pod to specify target node
+  tolerations:
+    - operator: "Exists"
+
+  # topologySpreadConstraints -- describes how a group of pods ought to spread across topology domains
+  topologySpreadConstraints: []
+
+  # app.affinity -- specifies pod affinity rules
+  affinity:
+    # app.affinity.nodeAffinity -- specifies node affinity rule
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                  - linux
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: label-1
+                operator: In
+                values:
+                  - key-1
+
+    # app.affinity.podAffinity -- specifies pod affinity rule
+    podAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - helloworld
+            topologyKey: kubernetes.io/hostname
+
+    # app.affinity.podAntiAffinity -- specifies pod anti affinity rules, weight is in the range 1-100
+    podAntiAffinity:
+      {}
+      # requiredDuringSchedulingIgnoredDuringExecution:
+      # - labelSelector:
+      #     matchExpressions:
+      #     - key: app
+      #       operator: In
+      #       values:
+      #       - helloworld
+      #   topologyKey: "kubernetes.io/hostname"
+
+  # app.env -- pod customized environment variable injected to the application container
+  env:
+    - name: HTTP_PORT
+      value: "8080"
+
+  # app.envFrom -- pod customized environment variable from selected reference to be injected to the application container
+  envFrom:
+    - secretRef:
+        name: secret
+    - configMapRef:
+        name: configmap
+
+  # app.podLabels -- additional labels attached to the pods
+  podLabels:
+    app.kubernetes.io/workload-type: java
+
+  # app.podAnnotations -- additional annotations attached to the pods
+  podAnnotations:
+    prometheus.io/port: "8888"
+    prometheus.io/scrape: "true"
+
+  # app.extraVolumes -- specifies a list of extra volumes to be attached to the pod
+  extraVolumes:
+    - name: shared-volume
+      emptyDir: {}
+
+  # app.securityContext -- specifies security context applied to the pod
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+    fsGroup: 2000
+
+  # app.terminationGracePeriodSeconds -- duration in seconds the pod needs to terminate gracefully
+  terminationGracePeriodSeconds: 30

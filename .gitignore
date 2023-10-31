@@ -1,0 +1,10 @@
+vendor/
+bin/**
+.env
+*.log
+*.out
+.DS_Store
+*.swp
+.idea
+*.html
+output/

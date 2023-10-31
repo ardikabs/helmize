@@ -1,0 +1,9 @@
+app:
+  # app.command -- specifies application container commands
+  command:
+    - apiserver
+
+  # app.args -- specifies application container args
+  args:
+    - --loglevel warn
+    - --logoutput stdout

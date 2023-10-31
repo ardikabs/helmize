@@ -1,0 +1,40 @@
+global:
+  # global.imagePullSecrets -- specifies list of image pull secrets attached to the pod
+  imagePullSecrets:
+    - name: github-cred
+
+  image:
+    # global.image.repository -- specifies which image container registry being used
+    repository: ghcr.io/ardikabs/etc/podinfo
+    # global.image.pullPolicy -- specifies what policy for the image pull
+    pullPolicy: IfNotPresent
+    # global.image.tag -- specifies which image container version being used
+    tag: "6.3.3"
+
+  # global.managedBy -- mark the manager of the resource, default to 'Helm'
+  managedBy: "manual"
+
+  serviceAccount:
+    # serviceAccount.create -- specifies whether to create a service account or not for the Pod
+    create: true
+
+    # serviceAccount.createToken -- specifies whether to create non-expired token for the service account
+    createToken: true
+
+    # serviceAccount.additionalRoles -- additional roles specification to add to service account access
+    additionalRoles:
+      - apiGroups:
+          - "apps"
+        resources:
+          - deployments
+        verbs:
+          - get
+          - list
+          - watch
+
+    # serviceAccount.additionalClusterRoles -- additional cluster roles specification to add to service account access
+    additionalClusterRoles: []
+
+app:
+  # app.enabled -- specifies whether to create Deployment object
+  enabled: true

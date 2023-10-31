@@ -1,0 +1,20 @@
+app:
+  replicas: 2
+
+  autoscaling:
+    # app.autoscaling.enabled -- whether to enable autoscaling (Horizontal Pod Autoscaler) or not
+    enabled: true
+    # app.autoscaling.targetCPUUtilizationPercentage -- target CPU utilization in percent
+    targetCPUUtilizationPercentage: 70
+    # app.autoscaling.targetMemoryUtilizationPercentage -- target memory utilization in percent
+    # targetMemoryUtilizationPercentage: 70
+    # app.autoscaling.minReplicas -- the minimum number of replica for Horizontal Pod Autoscaler
+    minReplicas: 1
+    # app.autoscaling.maxReplicas -- the maximum number of replica for Horizontal Pod Autoscaler
+    maxReplicas: 3
+    # app.autoscaling.annotations -- additional annotations attached to the Horizontal Pod Autoscaler
+    annotations:
+      custom: additional-annotation
+    # app.autoscaling.labels -- additional labels attached to the Horizontal Pod Autoscaler
+    labels:
+      custom: additional-label

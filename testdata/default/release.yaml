@@ -1,0 +1,20 @@
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: Release
+metadata:
+  name: service-a
+  namespace: default
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        # path: kasque
+        path: ../../bin/kasque
+spec:
+  chart: common-app
+  repo:
+    name: ardikabs
+    url: https://charts.ardikabs.com
+  version: 0.4.1
+  values:
+    - values.yaml
+    - values/*.yaml
+    - values/**/*.yaml
