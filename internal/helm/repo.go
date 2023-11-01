@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path"
-	"path/filepath"
-	"strings"
 
+	"github.com/ardikabs/helmize/internal/errs"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/getter"
 	"helm.sh/helm/v3/pkg/registry"
@@ -96,7 +94,7 @@ func (r HelmRepo) Init(ctx context.Context, client *action.Install) error {
 // The precedence during the NameAndChart generation are as follows:
 // 1. Path will be used when available
 // 2. Repo with OCI protocol will refer to the its URL
-// 3. Repo with HTTP protocol will refer to the repo Name and Chart Name
+// 3. Repo with HTTP protocol will refer to the combined of repo Name and Chart Name, e.g., repoName/chartName.
 func (r HelmRepo) NameAndChart(chartName string) (string, error) {
 	if r.Path != nil {
 		return ptr.Deref[string](r.Path, "."), nil
@@ -112,48 +110,8 @@ func (r HelmRepo) NameAndChart(chartName string) (string, error) {
 	}
 
 	if r.Name == nil {
-		return "", fmt.Errorf("repo name cannot be empty")
+		return "", fmt.Errorf("%w; Repo name cannot be empty when repo refers to HTTP protocol", errs.ErrInvalidObject)
 	}
 
 	return ptr.Deref[string](r.Name, "") + "/" + chartName, nil
-}
-
-func writeTempValues(name string, data []byte) (string, error) {
-	out, err := os.MkdirTemp("", name)
-	if err != nil {
-		return "", err
-	}
-
-	return writeToFile(out, "values.yaml", data)
-}
-
-func writeToFile(outputDir string, name string, data []byte) (string, error) {
-	outfileName := strings.Join([]string{outputDir, name}, string(filepath.Separator))
-
-	if err := ensureDirectoryForFile(outfileName); err != nil {
-		return "", err
-	}
-
-	f, err := os.Create(outfileName)
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	if _, err = f.Write(data); err != nil {
-		return "", err
-	}
-
-	return f.Name(), nil
-}
-
-// check if the directory exists to create file. creates if don't exists
-func ensureDirectoryForFile(file string) error {
-	baseDir := path.Dir(file)
-	_, err := os.Stat(baseDir)
-	if err != nil && !os.IsNotExist(err) {
-		return err
-	}
-
-	return os.MkdirAll(baseDir, 0755)
 }

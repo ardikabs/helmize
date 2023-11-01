@@ -1,0 +1,22 @@
+apiVersion: config.kubernetes.io/v1
+kind: ResourceList
+metadata:
+  name: input
+items:
+  - apiVersion: toolkit.ardikabs.com/v1alpha1
+    kind: Food
+    metadata:
+      annotations:
+        config.kubernetes.io/function: |
+          exec:
+            path: helmize
+        config.kubernetes.io/local-config: "true"
+        config.k8s.io/id: "1"
+      name: test-a
+      namespace: default
+    spec:
+      chart: minecraft
+      repo:
+        name: minecraft
+        url: https://itzg.github.io/minecraft-server-charts
+      version: 3.1.3

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/ardikabs/helmize/internal/errs"
 	"github.com/ardikabs/helmize/internal/helm"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -39,25 +40,25 @@ type ReleaseSpec struct {
 
 func (r *Release) Validate() error {
 	if r.APIVersion != apiVersion {
-		return fmt.Errorf("invalid APIVersion %s, it must be %s", r.APIVersion, apiVersion)
+		return fmt.Errorf("%w; APIVersion %s, it must be %s", errs.ErrInvalidObject, r.APIVersion, apiVersion)
 	}
 
 	if r.Kind != kind {
-		return fmt.Errorf("invalid Kind %s, it must be %s", r.Kind, kind)
+		return fmt.Errorf("%w; Kind %s, it must be %s", errs.ErrInvalidObject, r.Kind, kind)
 	}
 
 	if r.Name == "" {
-		return fmt.Errorf("release name cannot be empty")
+		return fmt.Errorf("%w; Release name cannot be empty", errs.ErrInvalidObject)
 	}
 
 	if r.Namespace == "" {
-		return fmt.Errorf("namespace cannot be empty")
+		return fmt.Errorf("%w; Release namespace cannot be empty", errs.ErrInvalidObject)
 	}
 
 	if r.Spec.Repo.Name == nil &&
 		r.Spec.Repo.URL == nil &&
 		r.Spec.Repo.Path == nil {
-		return fmt.Errorf("invalid repo; repo must have name, url, or path")
+		return fmt.Errorf("%w; Repo must have either name, url or path", errs.ErrInvalidObject)
 	}
 
 	return nil
