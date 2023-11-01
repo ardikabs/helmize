@@ -1,0 +1,21 @@
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: Release
+metadata:
+  name: test-1
+  namespace: default
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        # path: helmize
+        path: ../../bin/helmize
+spec:
+  repo:
+    path: ./test-chart
+  values:
+    - values.yaml
+  valuesInline:
+    foo: bar-inline
+    data:
+      key1: value1-inline
+      key2: value2
+      key3: value3

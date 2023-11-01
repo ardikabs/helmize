@@ -4,20 +4,25 @@ import (
 	"os"
 
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
-	"github.com/ardikabs/kasque/internal/release"
+	"github.com/ardikabs/helmize/internal/krm"
 	"github.com/spf13/cobra"
-	"sigs.k8s.io/yaml"
 )
 
 func MakeRoot() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use:   "kasque",
-		Short: "kasque is ...",
+		Use:   "helmize",
+		Short: "helmize is a KRM Function implementation for Helm support on Kustomize",
+		Example: `
+			# Helmize is intended to be used as KRM function only,
+			# thus a standalone usage is not supported
+
+			# KRM usage:
+			kustomize build --enable-alpha-plugins --enable-exec .
+		`,
 	}
 
 	cmd.Args = cobra.MaximumNArgs(0)
 	cmd.RunE = run
-
 	return cmd
 }
 
@@ -30,42 +35,9 @@ func run(cmd *cobra.Command, args []string) error {
 		os.Exit(1)
 	}
 
-	if err := fn.AsMain(fn.ResourceListProcessorFunc(generator)); err != nil {
+	if err := fn.AsMain(fn.ResourceListProcessorFunc(krm.Parse)); err != nil {
 		os.Exit(1)
 	}
 
 	return nil
-}
-
-func generator(rl *fn.ResourceList) (bool, error) {
-	var generatedObjects fn.KubeObjects
-	for _, manifest := range rl.Items {
-		release := new(release.Release)
-		if err := yaml.Unmarshal([]byte(manifest.String()), &release); err != nil {
-			rl.LogResult(err)
-			return false, err
-		}
-
-		if err := release.Validate(); err != nil {
-			rl.LogResult(err)
-			return false, err
-		}
-
-		generated, err := release.Render()
-		if err != nil {
-			rl.LogResult(err)
-			return false, err
-		}
-
-		objects, err := fn.ParseKubeObjects(generated)
-		if err != nil {
-			rl.LogResult(err)
-			return false, err
-		}
-
-		generatedObjects = append(generatedObjects, objects...)
-	}
-
-	rl.Items = generatedObjects
-	return true, nil
 }

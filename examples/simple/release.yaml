@@ -1,0 +1,15 @@
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: Release
+metadata:
+  name: test-1
+  namespace: default
+  annotations:
+    config.kubernetes.io/function: |
+      exec:
+        # path: helmize
+        path: ../../bin/helmize
+spec:
+  chart: minecraft
+  repo:
+    name: minecraft
+    url: https://itzg.github.io/minecraft-server-charts

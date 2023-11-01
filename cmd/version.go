@@ -15,9 +15,9 @@ var (
 func MakeVersion() *cobra.Command {
 	var command = &cobra.Command{
 		Use:          "version",
-		Short:        "Print the version number of kasque",
-		Long:         `All software has versions. This is kasque's`,
-		Example:      `  kasque version`,
+		Short:        "Print the version number of helmize",
+		Long:         `All software has versions. This is helmize's`,
+		Example:      `  helmize version`,
 		SilenceUsage: false,
 	}
 

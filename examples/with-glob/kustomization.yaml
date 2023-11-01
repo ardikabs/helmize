@@ -1,0 +1,12 @@
+generators:
+  - release.yaml
+
+configMapGenerator:
+  - name: configmap
+    envs:
+      - config.env
+
+secretGenerator:
+  - name: secret
+    envs:
+      - secret.env

@@ -10,13 +10,16 @@ func newClientFactory() *clientFactory {
 	return &clientFactory{}
 }
 
-func (h clientFactory) GetClient(includeCRDs bool) *action.Install {
+func (h clientFactory) GetClient(opts ...ClientOption) *action.Install {
 	actionConfig := new(action.Configuration)
 	installClient := action.NewInstall(actionConfig)
 	installClient.DryRun = true
 	installClient.ClientOnly = true
 	installClient.UseReleaseName = true
-	installClient.IncludeCRDs = includeCRDs
+
+	for _, o := range opts {
+		o(installClient)
+	}
 
 	return installClient
 }

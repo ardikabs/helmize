@@ -1,7 +1,8 @@
-Version := $(shell git describe --tags --dirty --always)
-GitCommit := $(shell git rev-parse HEAD)
-LDFLAGS := "-s -w -X github.com/ardikabs/kasque/cmd.Version=$(Version) -X github.com/ardikabs/kasque/cmd.GitCommit=$(GitCommit)"
-OUTDIR := bin
+PLUGIN_NAME := helmize
+Version 	:= $(shell git describe --tags --dirty --always)
+GitCommit 	:= $(shell git rev-parse HEAD)
+LDFLAGS 	:= "-s -w -X github.com/ardikabs/helmize/cmd.Version=$(Version) -X github.com/ardikabs/helmize/cmd.GitCommit=$(GitCommit)"
+OUTDIR 		:= bin
 
 GOLANGCI_VERSION = 1.31.0
 
@@ -57,3 +58,8 @@ test:
 vet:
 	@echo 'Vetting code...'
 	@go vet $(shell go list ./... | grep -v /vendor/|xargs echo)
+
+.PHONY: build
+build:
+	@mkdir -p $(OUTDIR)
+	go build -o $(OUTDIR)/$(PLUGIN_NAME)

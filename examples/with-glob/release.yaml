@@ -6,8 +6,8 @@ metadata:
   annotations:
     config.kubernetes.io/function: |
       exec:
-        # path: kasque
-        path: ../../bin/kasque
+        # path: helmize
+        path: ../../bin/helmize
 spec:
   chart: common-app
   repo:
@@ -16,5 +16,5 @@ spec:
   version: 0.4.1
   values:
     - values.yaml
-    - values/*.yaml
-    - values/**/*.yaml
+    - values.d/*.yaml
+    - values.d/enabled/*.yaml

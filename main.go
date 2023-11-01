@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/ardikabs/kasque/cmd"
+	"github.com/ardikabs/helmize/cmd"
 )
 
 func main() {
