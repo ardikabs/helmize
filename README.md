@@ -12,7 +12,7 @@ The Release specification:
 ```bash
 cat <<EOF > release-simple.yaml
 apiVersion: toolkit.ardikabs.com/v1alpha1
-kind: Release
+kind: HelmRelease
 metadata:
   name: simple-a
   namespace: default
@@ -30,7 +30,7 @@ EOF
 
 cat <<EOF > release-with-glob.yaml
 apiVersion: toolkit.ardikabs.com/v1alpha1
-kind: Release
+kind: HelmRelease
 metadata:
   name: service-a
   namespace: default
@@ -52,7 +52,7 @@ EOF
 
 cat <<EOF > release-with-oci-repo.yaml
 apiVersion: toolkit.ardikabs.com/v1alpha1
-kind: Release
+kind: HelmRelease
 metadata:
   name: envoy-gateway
   namespace: envoy-gateway-system

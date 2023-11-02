@@ -37,7 +37,7 @@ func run(cmd *cobra.Command, args []string) error {
 		os.Exit(1)
 	}
 
-	if err := fn.AsMain(fn.ResourceListProcessorFunc(krm.Parse)); err != nil {
+	if err := fn.AsMain(fn.ResourceListProcessorFunc(krm.Process)); err != nil {
 		os.Exit(1)
 	}
 

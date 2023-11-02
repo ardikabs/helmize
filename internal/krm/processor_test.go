@@ -48,7 +48,7 @@ func TestKRM_Parse(t *testing.T) {
 			in, err := os.ReadFile(filepath.Join("testdata", tc.name, "input.yaml"))
 			require.NoError(t, err)
 
-			out, err := fn.Run(fn.ResourceListProcessorFunc(krm.Parse), in)
+			out, err := fn.Run(fn.ResourceListProcessorFunc(krm.Process), in)
 			if tc.wantErr != nil {
 				require.ErrorIs(t, err, tc.wantErr)
 				return

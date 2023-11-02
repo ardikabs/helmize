@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
-	"github.com/ardikabs/helmize/internal/release"
+	"github.com/ardikabs/helmize/internal/helm"
 	"helm.sh/helm/v3/pkg/releaseutil"
 	"sigs.k8s.io/yaml"
 )
@@ -15,10 +15,10 @@ func wrapErr(err error) error {
 	return fmt.Errorf("%w\n", err)
 }
 
-func Parse(rl *fn.ResourceList) (bool, error) {
+func Process(rl *fn.ResourceList) (bool, error) {
 	var generatedObjects fn.KubeObjects
 	for _, manifest := range rl.Items {
-		release := new(release.Release)
+		release := new(helm.Release)
 		if err := yaml.Unmarshal([]byte(manifest.String()), &release); err != nil {
 			return false, wrapErr(err)
 		}

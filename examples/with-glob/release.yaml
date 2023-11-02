@@ -1,5 +1,5 @@
 apiVersion: toolkit.ardikabs.com/v1alpha1
-kind: Release
+kind: HelmRelease
 metadata:
   name: service-a
   namespace: default

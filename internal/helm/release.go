@@ -1,4 +1,4 @@
-package release
+package helm
 
 import (
 	"context"
@@ -6,13 +6,12 @@ import (
 	"io"
 
 	"github.com/ardikabs/helmize/internal/errs"
-	"github.com/ardikabs/helmize/internal/helm"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
-	apiVersion = "toolkit.ardikabs.com/v1alpha1"
-	kind       = "Release"
+	APIVersion = "toolkit.ardikabs.com/v1alpha1"
+	Kind       = "HelmRelease"
 )
 
 type Release struct {
@@ -23,9 +22,9 @@ type Release struct {
 }
 
 type ReleaseSpec struct {
-	Chart   string        `json:"chart,omitempty"`
-	Repo    helm.HelmRepo `json:"repo,omitempty"`
-	Version string        `json:"version,omitempty"`
+	Chart   string   `json:"chart,omitempty"`
+	Repo    HelmRepo `json:"repo,omitempty"`
+	Version string   `json:"version,omitempty"`
 
 	// Values represent list of files specified for the Helm release, it is similar with -f/--values Helm template flag
 	Values []string `json:"values,omitempty"`
@@ -39,12 +38,12 @@ type ReleaseSpec struct {
 }
 
 func (r *Release) Validate() error {
-	if r.APIVersion != apiVersion {
-		return fmt.Errorf("%w; APIVersion %s, it must be %s", errs.ErrInvalidObject, r.APIVersion, apiVersion)
+	if r.APIVersion != APIVersion {
+		return fmt.Errorf("%w; APIVersion %s, it must be %s", errs.ErrInvalidObject, r.APIVersion, APIVersion)
 	}
 
-	if r.Kind != kind {
-		return fmt.Errorf("%w; Kind %s, it must be %s", errs.ErrInvalidObject, r.Kind, kind)
+	if r.Kind != Kind {
+		return fmt.Errorf("%w; Kind %s, it must be %s", errs.ErrInvalidObject, r.Kind, Kind)
 	}
 
 	if r.Name == "" {
@@ -65,7 +64,7 @@ func (r *Release) Validate() error {
 }
 
 func (r *Release) Render(w io.Writer) error {
-	helmRenderer, err := helm.NewHelmRenderer(w, r.Spec.Repo)
+	helmRenderer, err := NewHelmRenderer(w, r.Spec.Repo)
 	if err != nil {
 		return err
 	}
@@ -77,8 +76,8 @@ func (r *Release) Render(w io.Writer) error {
 	return nil
 }
 
-func (r *Release) toRenderParameter() helm.RenderParameter {
-	return helm.RenderParameter{
+func (r *Release) toRenderParameter() RenderParameter {
+	return RenderParameter{
 		ReleaseName:           r.Name,
 		ReleaseNamespace:      r.Namespace,
 		ChartName:             r.Spec.Chart,

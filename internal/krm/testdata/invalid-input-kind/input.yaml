@@ -3,8 +3,8 @@ kind: ResourceList
 metadata:
   name: input
 items:
-  - apiVersion: unknown.ardikabs.com/v1alpha1
-    kind: Release
+  - apiVersion: toolkit.ardikabs.com/v1alpha1
+    kind: Food
     metadata:
       annotations:
         config.kubernetes.io/function: |
