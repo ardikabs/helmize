@@ -14,7 +14,6 @@ import (
 )
 
 func TestKRM_Parse(t *testing.T) {
-
 	testcases := []struct {
 		name    string
 		wantErr error

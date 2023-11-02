@@ -47,7 +47,7 @@ func ensureDirectoryForFile(file string) error {
 
 func createOrOpenFile(filename string, append bool) (*os.File, error) {
 	if append {
-		return os.OpenFile(filename, os.O_APPEND, 0600)
+		return os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0600)
 	}
 
 	return os.Create(filename)
