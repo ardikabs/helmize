@@ -65,7 +65,10 @@ func run(cmd *cobra.Command, args []string) error {
 			generatedObjects = append(generatedObjects, generated...)
 		}
 
-		os.Stdout.Write([]byte(generatedObjects.String()))
+		if _, err := os.Stdout.Write([]byte(generatedObjects.String())); err != nil {
+			return err
+		}
+
 		return nil
 	}
 
