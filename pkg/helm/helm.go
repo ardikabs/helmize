@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ardikabs/helmize/internal/errs"
-	"github.com/ardikabs/helmize/internal/util"
+	"github.com/ardikabs/helmize/pkg/errs"
+	"github.com/ardikabs/helmize/pkg/util"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/cli"
@@ -24,10 +24,9 @@ import (
 var settings = cli.New()
 
 type DefaultHelmRenderer struct {
-	writer    io.Writer
-	client    *clientFactory
-	repo      HelmRepo
-	isOCIRepo bool
+	writer io.Writer
+	client *clientFactory
+	repo   HelmRepo
 }
 
 func NewHelmRenderer(writer io.Writer, helmRepo HelmRepo) (*DefaultHelmRenderer, error) {

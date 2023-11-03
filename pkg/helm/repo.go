@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ardikabs/helmize/internal/errs"
+	"github.com/ardikabs/helmize/pkg/errs"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/getter"
 	"helm.sh/helm/v3/pkg/registry"

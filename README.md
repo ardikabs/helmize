@@ -1,5 +1,10 @@
 # Helmize
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/ardikabs/helmize.svg)](https://pkg.go.dev/github.com/ardikabs/helmize)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ardikabs/helmize)](https://goreportcard.com/report/github.com/ardikabs/helmize)
+[![Test Status](https://github.com/ardikabs/helmize/actions/workflows/test.yml/badge.svg?branch=main)]
+[![Codecov](https://codecov.io/gh/ardikabs/helmize/branch/main/graph/badge.svg)](https://codecov.io/gh/ardikabs/helmize)
+
 > A KRM function to enable Helm on Kustomize with Glob support
 
 The motivation for this project is quite simple. While [Helm integration](https://kubectl.docs.kubernetes.io/references/kustomize/builtins/#_helmchartinflationgenerator_) in Kustomize is already available, it falls short in scenarios where dynamic use of Glob is required to fetch all necessary values.yaml files. In such cases, it lacks support.

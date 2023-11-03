@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/ardikabs/helmize/internal/errs"
+	"github.com/ardikabs/helmize/pkg/errs"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

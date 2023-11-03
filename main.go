@@ -11,6 +11,6 @@ func main() {
 	root.AddCommand(cmd.MakeVersion())
 
 	if err := root.Execute(); err != nil {
-		os.Exit(1)
+		os.Exit(2)
 	}
 }
