@@ -1,4 +1,4 @@
-package krm
+package processor
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
-	"github.com/ardikabs/helmize/internal/helm"
+	"github.com/ardikabs/helmize/pkg/helm"
 	"helm.sh/helm/v3/pkg/releaseutil"
 	"sigs.k8s.io/yaml"
 )
@@ -15,21 +15,32 @@ func wrapErr(err error) error {
 	return fmt.Errorf("%w\n", err)
 }
 
-func Process(rl *fn.ResourceList) (bool, error) {
+func ProcessResourceList(rl *fn.ResourceList) (bool, error) {
+	generatedObjects, err := ProcessKubeObjects(rl.Items)
+	if err != nil {
+		return false, err
+	}
+
+	rl.Items = generatedObjects
+	return true, nil
+}
+
+func ProcessKubeObjects(objs fn.KubeObjects) (fn.KubeObjects, error) {
 	var generatedObjects fn.KubeObjects
-	for _, manifest := range rl.Items {
+
+	for _, manifest := range objs {
 		release := new(helm.Release)
 		if err := yaml.Unmarshal([]byte(manifest.String()), &release); err != nil {
-			return false, wrapErr(err)
+			return nil, wrapErr(err)
 		}
 
 		if err := release.Validate(); err != nil {
-			return false, wrapErr(err)
+			return nil, wrapErr(err)
 		}
 
 		var buf bytes.Buffer
 		if err := release.Render(&buf); err != nil {
-			return false, wrapErr(err)
+			return nil, wrapErr(err)
 		}
 
 		for _, manifest := range releaseutil.SplitManifests(buf.String()) {
@@ -38,13 +49,12 @@ func Process(rl *fn.ResourceList) (bool, error) {
 				if strings.Contains(err.Error(), "expected exactly one object") {
 					continue
 				}
-				return false, wrapErr(err)
+				return nil, wrapErr(err)
 			}
 
 			generatedObjects = append(generatedObjects, object)
 		}
 	}
 
-	rl.Items = generatedObjects
-	return true, nil
+	return generatedObjects, nil
 }

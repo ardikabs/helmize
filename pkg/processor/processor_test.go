@@ -1,4 +1,4 @@
-package krm_test
+package processor_test
 
 import (
 	"os"
@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
-	"github.com/ardikabs/helmize/internal/errs"
-	"github.com/ardikabs/helmize/internal/krm"
+	"github.com/ardikabs/helmize/pkg/errs"
+	"github.com/ardikabs/helmize/pkg/processor"
 	"github.com/sters/yaml-diff/yamldiff"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -48,7 +48,7 @@ func TestKRM_Parse(t *testing.T) {
 			in, err := os.ReadFile(filepath.Join("testdata", tc.name, "input.yaml"))
 			require.NoError(t, err)
 
-			out, err := fn.Run(fn.ResourceListProcessorFunc(krm.Process), in)
+			out, err := fn.Run(fn.ResourceListProcessorFunc(processor.ProcessResourceList), in)
 			if tc.wantErr != nil {
 				require.ErrorIs(t, err, tc.wantErr)
 				return
