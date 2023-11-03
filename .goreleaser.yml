@@ -1,0 +1,43 @@
+version: 1
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - binary: helmize
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    goarm:
+      - "6"
+      - "7"
+    ldflags:
+      - -X github.com/ardikabs/helmize/cmd.Version={{.Version}}
+      - -X github.com/ardikabs/helmize/cmd.GitCommit={{.Commit}}
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - format: binary
+
+changelog:
+  filters:
+    exclude:
+      - "^Release version"
+      - "^Merge pull request"
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: ardikabs
+    name: helmize
+  name_template: "Version {{.Version}}"

@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/*.go"
+
+  workflow_call:
+
+jobs:
+  audit:
+    name: Auditing the code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ^1.21.x
+
+      - name: Install make
+        run: |
+          sudo apt update -y
+          sudo apt install make curl git -y
+
+      - name: Run audit
+        run: |
+          make lint
+          make test
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./output/coverage.out
