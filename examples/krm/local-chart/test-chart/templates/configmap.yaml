@@ -4,5 +4,6 @@ metadata:
   name: {{ .Values.foo }}
 data:
   {{- with .Values.data }}
-  {{ toYaml . | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
   {{- end }}
+  longkey: {{ .Values.longkey | quote }}
