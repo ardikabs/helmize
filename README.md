@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/ardikabs/helmize.svg)](https://pkg.go.dev/github.com/ardikabs/helmize)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ardikabs/helmize)](https://goreportcard.com/report/github.com/ardikabs/helmize)
-[![Test Status](https://github.com/ardikabs/helmize/actions/workflows/test.yml/badge.svg?branch=main)]
+[![Test](https://github.com/ardikabs/helmize/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/ardikabs/helmize/actions/workflows/test.yaml)
 [![Codecov](https://codecov.io/gh/ardikabs/helmize/branch/main/graph/badge.svg)](https://codecov.io/gh/ardikabs/helmize)
 
 > A KRM function to enable Helm on Kustomize with Glob support
