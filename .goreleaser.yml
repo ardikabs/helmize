@@ -41,3 +41,48 @@ release:
     owner: ardikabs
     name: helmize
   name_template: "Version {{.Version}}"
+
+dockers:
+  - goos: linux
+    goarch: amd64
+    use: buildx
+    dockerfile: .goreleaser.Dockerfile
+    image_templates:
+      - "ghcr.io/ardikabs/helmize:latest-amd64"
+      - "ghcr.io/ardikabs/helmize:{{ .Major }}-amd64"
+      - "ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}-amd64"
+      - "ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64"
+    build_flag_templates:
+      - "--builder=builders"
+      - "--platform=linux/amd64"
+
+  - goos: linux
+    goarch: arm64
+    use: buildx
+    dockerfile: .goreleaser.Dockerfile
+    image_templates:
+      - "ghcr.io/ardikabs/helmize:latest-amd64"
+      - "ghcr.io/ardikabs/helmize:{{ .Major }}-amd64"
+      - "ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}-amd64"
+      - "ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64"
+    build_flag_templates:
+      - "--builder=builders"
+      - "--platform=linux/arm64"
+
+docker_manifests:
+  - name_template: ghcr.io/ardikabs/helmize:latest
+    image_templates:
+      - ghcr.io/ardikabs/helmize:latest-amd64
+      - ghcr.io/ardikabs/helmize:latest-arm64
+  - name_template: ghcr.io/ardikabs/helmize:v{{ .Major }}
+    image_templates:
+      - ghcr.io/ardikabs/helmize:{{ .Major }}-amd64
+      - ghcr.io/ardikabs/helmize:{{ .Major }}-arm64
+  - name_template: ghcr.io/ardikabs/helmize:v{{ .Major }}.{{ .Minor }}
+    image_templates:
+      - ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}-amd64
+      - ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}-arm64
+  - name_template: ghcr.io/ardikabs/helmize:v{{ .Major }}.{{ .Minor }}.{{ .Patch }}
+    image_templates:
+      - ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
+      - ghcr.io/ardikabs/helmize:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm64

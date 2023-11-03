@@ -1,0 +1,5 @@
+FROM ghcr.io/ardikabs/etc/shell
+
+USER nobody
+COPY helmize /usr/bin/helmize
+CMD ["/usr/bin/helmize"]

@@ -3,10 +3,11 @@ name: Release
 on:
   push:
     tags:
-      - "*"
+      - "v*.*.*"
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   test:
@@ -30,6 +31,19 @@ jobs:
         uses: devops-actions/action-get-tag@v1.0.2
         with:
           strip_v: true
+
+      - uses: docker/setup-qemu-action@v2
+
+      - uses: docker/setup-buildx-action@v2
+        with:
+          endpoint: builders
+
+      - name: Log in to the GitHub Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
