@@ -12,6 +12,8 @@ With the likelihood of [glob support](https://github.com/kubernetes-sigs/kustomi
 
 ## Usage
 
+### Create directory
+
 The Release specification:
 
 ```bash
@@ -24,8 +26,7 @@ metadata:
   annotations:
     config.kubernetes.io/function: |
       exec:
-        # path: helmize
-        path: ../../bin/helmize
+        path: helmize
 spec:
   chart: minecraft
   repo:
@@ -64,8 +65,7 @@ metadata:
   annotations:
     config.kubernetes.io/function: |
       exec:
-        # path: helmize
-        path: ../../bin/helmize
+        path: helmize
 spec:
   repo:
     url: oci://docker.io/envoyproxy/gateway-helm
@@ -85,7 +85,7 @@ kind: Kustomization
 generators:
 - release-simple.yaml
 - release-with-glob.yaml
-- release-with-oci.yaml
+- release-with-oci-repo.yaml
 EOF
 ```
 
