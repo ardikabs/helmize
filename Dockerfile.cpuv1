@@ -1,0 +1,4 @@
+FROM alpine:3.14
+
+COPY helmize /usr/bin/helmize
+CMD ["/usr/bin/helmize"]

@@ -28,12 +28,6 @@ jobs:
         with:
           go-version: ^1.21.x
 
-      - name: Get Tag
-        id: tag
-        uses: devops-actions/action-get-tag@v1.0.2
-        with:
-          strip_v: true
-
       - uses: docker/setup-qemu-action@v2
 
       - name: Log in to the GitHub Container registry
@@ -48,6 +42,6 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --rm-dist
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
