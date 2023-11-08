@@ -12,9 +12,9 @@ With the likelihood of [glob support](https://github.com/kubernetes-sigs/kustomi
 
 ## Usage
 
-### Create directory
+### Exec KRM Function
 
-The Release specification:
+#### Create `HelmRelease` Manifest
 
 ```bash
 cat <<EOF > release-simple.yaml
@@ -75,7 +75,7 @@ spec:
 EOF
 ```
 
-Then, you put above Release yaml to the generators field in the `kustomization.yaml`:
+#### Generate Manifest
 
 ```bash
 cat <<EOF > kustomization.yaml
@@ -87,13 +87,85 @@ generators:
 - release-with-glob.yaml
 - release-with-oci-repo.yaml
 EOF
+
+kustomize build --enable-alpha-plugins --enable-exec .
 ```
 
-To generate the manifest you need to use the following command:
+### Legacy Plugin
+
+#### Download Helmize binary
+
 ```bash
+curl -sSfL -O https://github.com/ardikabs/helmize/releases/download/v0.1.1/helmize_0.1.1_linux_amd64
 
-$ kustomize build --enable-alpha-plugins --enable-exec .
+export HELMIZE_PLUGIN_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/kustomize/plugin/toolkit.ardikabs.com/v1alpha1/helmrelease"
+mkdir -p $HELMIZE_PLUGIN_DIR
+mv helmize_0.1.1_linux_amd64 "${HELMIZE_PLUGIN_DIR}/HelmRelease"
+```
 
+#### Create `HelmRelease` Manifest
+
+```bash
+cat <<EOF > release-simple.yaml
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: HelmRelease
+metadata:
+  name: simple-a
+  namespace: default
+spec:
+  chart: minecraft
+  repo:
+    name: minecraft
+    url: https://itzg.github.io/minecraft-server-charts
+EOF
+
+cat <<EOF > release-with-glob.yaml
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: HelmRelease
+metadata:
+  name: service-a
+  namespace: default
+spec:
+  chart: common-app
+  repo:
+    name: ardikabs
+    url: https://charts.ardikabs.com
+  version: 0.4.1
+  values:
+    - values.yaml
+    - values/*.yaml
+    - values/**/*.yaml
+EOF
+
+cat <<EOF > release-with-oci-repo.yaml
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system
+spec:
+  repo:
+    url: oci://docker.io/envoyproxy/gateway-helm
+  version: v0.5.0
+  includeCRDs: true
+  createNamespace: true
+EOF
+```
+
+#### Generate Manifest
+
+```bash
+cat <<EOF > kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generators:
+- release-simple.yaml
+- release-with-glob.yaml
+- release-with-oci-repo.yaml
+EOF
+
+kustomize build --enable-alpha-plugins .
 ```
 
 ## More

@@ -1,0 +1,13 @@
+apiVersion: toolkit.ardikabs.com/v1alpha1
+kind: HelmRelease
+metadata:
+  name: test-2
+  namespace: default
+spec:
+  chart: minecraft
+  repo:
+    name: minecraft
+    url: https://itzg.github.io/minecraft-server-charts
+  version: 3.1.4
+  values:
+    - release-2/values.yaml
