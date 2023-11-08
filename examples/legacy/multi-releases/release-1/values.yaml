@@ -1,0 +1,3 @@
+minecraftServer:
+  rcon:
+    password: password

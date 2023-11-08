@@ -1,0 +1,4 @@
+generators:
+  - release-1.yaml
+  - release-2.yaml
+  - release-3.yaml
