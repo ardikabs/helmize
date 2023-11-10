@@ -2,6 +2,7 @@ package helm
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
@@ -10,7 +11,6 @@ import (
 	"helm.sh/helm/v3/pkg/getter"
 	"helm.sh/helm/v3/pkg/registry"
 	"helm.sh/helm/v3/pkg/repo"
-	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/utils/ptr"
 )
 
@@ -44,14 +44,8 @@ func (r HelmRepo) Init(ctx context.Context, client *action.Install) error {
 	repoName := ptr.Deref[string](r.Name, "")
 	errChan := make(chan error)
 	go func(name, url string) {
-		b, err := os.ReadFile(settings.RepositoryConfig)
-		if err != nil && !os.IsNotExist(err) {
-			errChan <- err
-			return
-		}
-
-		var repoFile repo.File
-		if err := yaml.Unmarshal(b, &repoFile); err != nil {
+		repoFile, err := r.loadFile(settings.RepositoryConfig)
+		if err != nil {
 			errChan <- err
 			return
 		}
@@ -88,6 +82,15 @@ func (r HelmRepo) Init(ctx context.Context, client *action.Install) error {
 	case <-ctx.Done():
 		return ctx.Err()
 	}
+}
+
+func (r HelmRepo) loadFile(path string) (file *repo.File, err error) {
+	file, err = repo.LoadFile(path)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return
+	}
+
+	return file, nil
 }
 
 // NameAndChart returns the name and chart that should be used.
