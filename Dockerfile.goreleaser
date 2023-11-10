@@ -1,4 +1,7 @@
 FROM ghcr.io/ardikabs/etc/shell
 
 COPY helmize /usr/bin/helmize
-ENTRYPOINT ["/usr/bin/helmize"]
+RUN mkdir -p /.config /.cache && \
+    chown nobody:nobody /.config /.cache
+
+CMD ["/usr/bin/helmize"]

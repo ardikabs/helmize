@@ -90,11 +90,7 @@ func (r HelmRepo) loadFile(path string) (file *repo.File, err error) {
 		return
 	}
 
-	if err = file.WriteFile(path, 0644); err != nil {
-		return
-	}
-
-	return
+	return file, nil
 }
 
 // NameAndChart returns the name and chart that should be used.

@@ -1,4 +1,7 @@
-FROM alpine:3.14
+FROM alpine:3.18
 
 COPY helmize /usr/bin/helmize
+RUN mkdir -p /.config /.cache && \
+    chown nobody:nobody /.config /.cache
+
 CMD ["/usr/bin/helmize"]

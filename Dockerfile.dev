@@ -1,0 +1,15 @@
+FROM golang:1.21-alpine3.18 AS builder
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o bin/helmize
+
+FROM alpine:3.18
+COPY --from=builder /app/bin/helmize /usr/bin/helmize
+RUN mkdir -p /.config /.cache && \
+    chown nobody:nobody /.config /.cache
+
+USER nobody
+CMD ["/usr/bin/helmize"]
